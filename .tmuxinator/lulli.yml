@@ -1,0 +1,14 @@
+# ~/.tmuxinator/lulli.yml
+
+name: lulli
+root: ~/code/lulli/
+socket_name: lulli
+
+windows:
+    - run: npm run start
+    - frontend:
+        root: ~/code/lulli/frontend
+    - backend:
+        root: ~/code/lulli/backend
+    - git: git status
+    - shell:

@@ -1,0 +1,4 @@
+cd ~/.config/tmuxinator/
+ln -s ~/path/to/PROJECT.yml
+cd -
+tmuxinator start PROJECT
