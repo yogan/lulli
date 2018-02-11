@@ -1,0 +1,15 @@
+{
+  "name": "lulli",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Frank Blendinger",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run start",
+    "frontend": "cd frontend && npm run start"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "3.1.0"
+  }
+}

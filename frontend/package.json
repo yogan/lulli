@@ -1,7 +1,8 @@
 {
-  "name": "lulli",
+  "name": "lulli-frontend",
   "version": "0.1.0",
   "private": true,
+  "author": "Frank Blendinger",
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
