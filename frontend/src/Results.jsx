@@ -7,10 +7,12 @@ export function Results({images}) {
     return null;
   }
 
-  return images.map(filename => <EvilHardcodedImage filename={filename}/>);
+  return images.map((filename, idx) =>
+    <EvilHardcodedImage key={idx} filename={filename} />
+  );
 }
 
 function EvilHardcodedImage({filename}) {
   const url = `http://zogan.de/var/lulz/2018/${filename}`;
-  return <img src={url} title={filename} />;
+  return <img src={url} alt={filename} title={filename} />;
 }
