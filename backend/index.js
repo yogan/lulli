@@ -1,17 +1,23 @@
 const express = require('express');
-const fs      = require('fs');
 const files   = require('./files');
-
-files.cacheFiles();
 
 const app = express();
 
 app.get('/api/search', (req, res) => {
-  const searchString = req.query.q;
-  const searchTerms  = searchString.trim().split(/ +/);
+  const searchString = req.query.q.trim();
+  if (!searchString) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const searchTerms = searchString.split(/ +/);
+
+  if (searchTerms.count === 0) {
+    res.sendStatus(400);
+    return;
+  }
 
   const results = files.search(searchTerms);
-
   res.send(results);
 });
 

@@ -21,10 +21,9 @@ export class Search extends Component {
     const query = queryString.stringify({q: this.state.searchText});
 
     const response = await fetch(`/api/search?${query}`);
-    const payload  = await response.json();
+    const matches  = await response.json();
 
-    console.log('images payload: ', payload);
-    this.setState({images: payload});
+    this.setState({images: matches});
   }
 
   render() {

@@ -7,7 +7,7 @@ export function Results(props) {
   }
 
   const images = props.images.map((image, idx) => {
-    return <ul key={idx}>{image.filename}</ul>
+    return <ul key={idx}>{image}</ul>
   });
 
   return <ul>{images}</ul>;
