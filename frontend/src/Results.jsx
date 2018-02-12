@@ -1,14 +1,16 @@
 import React from 'react';
 
-export function Results(props) {
-  console.log('got: ', props);
-  if (!props.images || props.images.length === 0) {
+import './Results.css';
+
+export function Results({images}) {
+  if (!images || images.length === 0) {
     return null;
   }
 
-  const images = props.images.map((image, idx) => {
-    return <ul key={idx}>{image}</ul>
-  });
+  return images.map(filename => <EvilHardcodedImage filename={filename}/>);
+}
 
-  return <ul>{images}</ul>;
+function EvilHardcodedImage({filename}) {
+  const url = `http://zogan.de/var/lulz/2018/${filename}`;
+  return <img src={url} title={filename} />;
 }
