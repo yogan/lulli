@@ -13,6 +13,6 @@ export function Results({images}) {
 }
 
 function EvilHardcodedImage({filename}) {
-  const url = `http://zogan.de/var/lulz/2018/${filename}`;
+  const url = `http://zogan.de/var/lulz/${filename}`;
   return <img src={url} alt={filename} title={filename} />;
 }
