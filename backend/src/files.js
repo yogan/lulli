@@ -1,7 +1,7 @@
 const fs     = require('fs');
 const config = require('./config');
 
-const path = config.getPath();
+const rootPath = config.getPath();
 
 function listImageFiles(path) {
   return fs
@@ -19,10 +19,32 @@ function allTermsMatch(filename, searchTerms) {
   }, true);
 }
 
+function getSubdirs(path) {
+  return fs.readdirSync(path)
+    .filter(filename => fs.statSync(`${path}/${filename}`).isDirectory());
+}
 
 function search(searchTerms) {
-  const images = listImageFiles(path);
-  return images.filter(filename => allTermsMatch(filename, searchTerms));
+  const subdirs = getSubdirs(rootPath);
+
+  const dirsWithImages = subdirs.map(dir => ({
+    dir,
+    images: getMatchingImages(`${rootPath}/${dir}`, searchTerms)
+  }));
+
+  return flattenImageResults(dirsWithImages);
+}
+
+function flattenImageResults(dirsWithImages) {
+  return dirsWithImages.reduce((acc, cur) => {
+    cur.images.forEach(image => acc.push(`${cur.dir}/${image}`));
+    return acc;
+  }, []);
+}
+
+function getMatchingImages(path, searchTerms) {
+  const filenames = listImageFiles(path)
+  return filenames.filter(filename => allTermsMatch(filename, searchTerms));
 }
 
 module.exports.search = search;
