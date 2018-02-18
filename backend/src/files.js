@@ -35,10 +35,16 @@ function isImage(filename) {
   return filename.match(/\.(png|jpe?g|gif)$/);
 }
 
+module.exports.allTermsMatch = allTermsMatch;   // for test only
+
 function allTermsMatch(filename, searchTerms) {
-  return searchTerms.reduce((matches, term) => {
-    return matches && filename.match(new RegExp(term, "ig"))
-  }, true);
+  return searchTerms.reduce((doesMatch, term) => (
+    doesMatch && matches(filename, term)
+  ), true);
+}
+
+function matches(filename, term) {
+  return !!filename.match(new RegExp(term, "ig"));
 }
 
 function flattenImageResults(dirsWithImages) {
