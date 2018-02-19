@@ -1,6 +1,7 @@
-const fs     = require('fs');
-const config = require('./config');
+const fs              = require('fs');
 
+const config          = require('./config');
+const {addTypes}      = require('./filetypes');
 const {allTermsMatch} = require('./matcher');
 
 module.exports.search = search;
@@ -14,38 +15,28 @@ function search(searchTerms) {
     return [];
   }
 
-  const dirsWithImages = subdirs.map(dir => ({
-    dir,
-    images: getMatchingImages(`${rootPath}/${dir}`, searchTerms)
-  }));
+  const subdirMatches = subdirs.map(subdir => {
+    return getMatchesInDir(rootPath, subdir, searchTerms)
+      .map(filename => ({ filename, subdir }));
+  });
 
-  return flattenImageResults(dirsWithImages);
+  const matchesWithRelativePaths = flatten(subdirMatches);
+
+  return addTypes(matchesWithRelativePaths);
 }
 
 function getSubdirs(path) {
-  return fs.readdirSync(path)
+  return fs
+    .readdirSync(path)
     .filter(filename => fs.statSync(`${path}/${filename}`).isDirectory());
 }
 
-function getMatchingImages(path, searchTerms) {
-  const filenames = listImageFiles(path);
-  return filenames.filter(filename => allTermsMatch(filename, searchTerms));
-}
-
-function listImageFiles(path) {
+function getMatchesInDir(rootPath, subdir, searchTerms) {
   return fs
-    .readdirSync(path)
-    .filter(filename => isImage(filename));
+    .readdirSync(`${rootPath}/${subdir}`)
+    .filter(filename => allTermsMatch(filename, searchTerms));
 }
 
-function isImage(filename) {
-  return filename.match(/\.(png|jpe?g|gif)$/);
-}
-
-
-function flattenImageResults(dirsWithImages) {
-  return dirsWithImages.reduce((acc, cur) => {
-    cur.images.forEach(image => acc.push(`${cur.dir}/${image}`));
-    return acc;
-  }, []);
+function flatten(array) {
+  return [].concat(...array);
 }

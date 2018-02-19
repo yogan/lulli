@@ -2,17 +2,22 @@ import React from 'react';
 
 import './Results.css';
 
-export function Results({images}) {
-  if (!images || images.length === 0) {
+export function Results({matches}) {
+  if (!matches || matches.length === 0) {
     return null;
   }
 
-  return images.map((filename, idx) =>
-    <EvilHardcodedImage key={idx} filename={filename} />
+  // TODO handle non-image results (read: videos)
+
+  const images = matches.filter(match => match.type === 'image');
+
+  return images
+    .map((image, idx) => <EvilHardcodedImage key={idx} image={image} />
   );
 }
 
-function EvilHardcodedImage({filename}) {
-  const url = `http://zogan.de/var/lulz/${filename}`;
+function EvilHardcodedImage({image}) {
+  const {subdir, filename} = image;
+  const url = `http://zogan.de/var/lulz/${subdir}/${filename}`;
   return <img src={url} alt={filename} title={filename} />;
 }

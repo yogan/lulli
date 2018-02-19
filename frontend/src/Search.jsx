@@ -5,7 +5,7 @@ import {Results} from './Results';
 export class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {searchText: '', images: []};
+    this.state = {searchText: '', matches: []};
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,7 +23,7 @@ export class Search extends Component {
     const response = await fetch(`/api/search?${query}`);
     const matches  = await response.json();
 
-    this.setState({images: matches});
+    this.setState({matches});
   }
 
   render() {
@@ -39,7 +39,7 @@ export class Search extends Component {
           <input type="submit" value="Submit" />
         </form>
 
-        <Results images={this.state.images}/>
+        <Results matches={this.state.matches}/>
       </div>
     );
   }
