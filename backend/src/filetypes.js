@@ -16,5 +16,5 @@ function getType(filename) {
 }
 
 function isImage(filename) {
-  return filename.match(/\.(png|jpe?g|gif)$/);
+  return filename.match(/\.(png|jpe?g|gif)$/i);
 }
