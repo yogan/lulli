@@ -9,6 +9,11 @@ function search(searchTerms) {
   const rootPath = config.getPath();
   const subdirs = getSubdirs(rootPath);
 
+  if (!subdirs || subdirs.length === 0) {
+    console.warn(`no subdirs found in rootPath '${rootPath}'`);
+    return [];
+  }
+
   const dirsWithImages = subdirs.map(dir => ({
     dir,
     images: getMatchingImages(`${rootPath}/${dir}`, searchTerms)
