@@ -1,6 +1,8 @@
 const fs     = require('fs');
 const config = require('./config');
 
+const {allTermsMatch} = require('./matcher');
+
 module.exports.search = search;
 
 function search(searchTerms) {
@@ -35,17 +37,6 @@ function isImage(filename) {
   return filename.match(/\.(png|jpe?g|gif)$/);
 }
 
-module.exports.allTermsMatch = allTermsMatch;   // for test only
-
-function allTermsMatch(filename, searchTerms) {
-  return searchTerms.reduce((doesMatch, term) => (
-    doesMatch && matches(filename, term)
-  ), true);
-}
-
-function matches(filename, term) {
-  return !!filename.match(new RegExp(term, "ig"));
-}
 
 function flattenImageResults(dirsWithImages) {
   return dirsWithImages.reduce((acc, cur) => {

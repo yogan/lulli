@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import {allTermsMatch} from './files';
+import {allTermsMatch} from './matcher';
 
 test('allTermsMatch() matches a full filename as search', t => {
     const filename    = 'foo.png';
