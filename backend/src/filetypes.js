@@ -10,6 +10,8 @@ function addTypes(matches) {
 function getType(filename) {
   if (isImage(filename)) {
     return 'image';
+  } else if (isVideo(filename)) {
+    return 'video';
   }
 
   return 'unknown';
@@ -17,4 +19,8 @@ function getType(filename) {
 
 function isImage(filename) {
   return filename.match(/\.(png|jpe?g|gif)$/i);
+}
+
+function isVideo(filename) {
+  return filename.match(/\.(mp4|webm)$/i);
 }

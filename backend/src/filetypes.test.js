@@ -53,3 +53,19 @@ test('addTypes() keeps additional properties', t => {
     { type: 'unknown', filename: 'non_image.bin', size: 1024, meta: { data: ['xxx'] } }
   ]);
 });
+
+test('addTypes() detects some videos', t => {
+  const matches = [
+    { filename: 'cool flick.mp4' },
+    { filename: 'LOUD!.MP4' },
+    { filename: 'lolinternet.webm' }
+  ];
+
+  const result = addTypes(matches);
+
+  t.deepEqual(result, [
+    { type: 'video', filename: 'cool flick.mp4' },
+    { type: 'video', filename: 'LOUD!.MP4' },
+    { type: 'video', filename: 'lolinternet.webm' }
+  ]);
+});
