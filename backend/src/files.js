@@ -50,8 +50,8 @@ function search(searchTerms) {
 }
 
 function toUrl(subdir, filename) {
-  // TODO remove hardcoded value, put in config
-  return `http://zogan.de/var/lulz/${subdir}/${filename}`;
+  const baseUrl = config.get('baseUrl');
+  return `${baseUrl}/${subdir}/${filename}`;
 }
 
 function getSubdirs(path) {
