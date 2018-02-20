@@ -1,4 +1,9 @@
-img {
+.results {
+  margin:      0.4em;
+  padding-top: 0.2em;
+}
+
+img, video {
   border: 1px dashed;
   margin: 0.2em;
 }

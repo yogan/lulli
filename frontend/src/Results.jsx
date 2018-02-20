@@ -7,15 +7,30 @@ export function Results({matches}) {
     return null;
   }
 
-  // TODO handle non-image results (read: videos)
-
-  const images = matches.filter(match => match.type === 'image');
-
-  return images.map((image, idx) => <Image key={idx} image={image} />
+  return (
+    <div className="results">
+      {matches.map((match, idx) => toMediaElem(match, idx))}
+    </div>
   );
+}
+
+function toMediaElem(match, idx) {
+  switch (match.type) {
+    case 'image':
+      return <Image key={idx} image={match} />;
+    case 'video':
+      return <Video key={idx} video={match} />;
+    default:
+      return null;
+  }
 }
 
 function Image({image}) {
   const {filename, url} = image;
   return <img src={url} alt={filename} title={filename} />;
+}
+
+function Video({video}) {
+  const {url} = video;
+  return <video controls><source src={url} /></video>;
 }
