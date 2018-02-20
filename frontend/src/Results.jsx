@@ -11,13 +11,11 @@ export function Results({matches}) {
 
   const images = matches.filter(match => match.type === 'image');
 
-  return images
-    .map((image, idx) => <EvilHardcodedImage key={idx} image={image} />
+  return images.map((image, idx) => <Image key={idx} image={image} />
   );
 }
 
-function EvilHardcodedImage({image}) {
-  const {subdir, filename} = image;
-  const url = `http://zogan.de/var/lulz/${subdir}/${filename}`;
+function Image({image}) {
+  const {filename, url} = image;
   return <img src={url} alt={filename} title={filename} />;
 }

@@ -17,12 +17,21 @@ function search(searchTerms) {
 
   const subdirMatches = subdirs.map(subdir => {
     return getMatchesInDir(rootPath, subdir, searchTerms)
-      .map(filename => ({ filename, subdir }));
+      .map(filename => ({
+        filename,
+        url: toUrl(subdir, filename),
+        year: subdir
+      }));
   });
 
   const matchesWithRelativePaths = flatten(subdirMatches);
 
   return addTypes(matchesWithRelativePaths);
+}
+
+function toUrl(subdir, filename) {
+  // TODO remove hardcoded value, put in config
+  return `http://zogan.de/var/lulz/${subdir}/${filename}`;
 }
 
 function getSubdirs(path) {
