@@ -3,7 +3,12 @@ import React from 'react';
 export default function Image({image}) {
   const {filename, url, year} = image;
   const title = makeTitle(filename, year);
-  return <img src={url} alt={title} title={title} />;
+  return (
+    <figure>
+      <img src={url} alt={title} title={title} />
+      <figcaption>{title}</figcaption>
+    </figure>
+  );
 }
 
 function makeTitle(filename, year) {
