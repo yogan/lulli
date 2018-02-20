@@ -1,13 +1,33 @@
+const config          = require('config');
 const fs              = require('fs');
 
-const config          = require('./config');
 const {addTypes}      = require('./filetypes');
 const {allTermsMatch} = require('./matcher');
 
-module.exports.search = search;
+module.exports.search         = search;
+module.exports.tryGetRootPath = tryGetRootPath;
+
+let rootPath = null;
+
+function tryGetRootPath() {
+  try {
+    rootPath = config.get('rootPath');
+    const isDir = fs.statSync(rootPath).isDirectory();
+    if (!isDir) {
+      exitRootPathMissing(rootPath);
+    }
+    return rootPath;
+  } catch(e) {
+    exitRootPathMissing(rootPath);
+  }
+}
+
+function exitRootPathMissing(rootPath) {
+  console.log(`The 'rootPath' config value has to point to a directory (value in config was '${rootPath}')`);
+  process.exit(1);
+}
 
 function search(searchTerms) {
-  const rootPath = config.getPath();
   const subdirs = getSubdirs(rootPath);
 
   if (!subdirs || subdirs.length === 0) {

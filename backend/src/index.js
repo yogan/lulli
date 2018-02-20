@@ -1,6 +1,9 @@
 const express = require('express');
 const files   = require('./files');
 
+
+files.tryGetRootPath();
+
 const app = express();
 
 app.get('/api/search', (req, res) => {
