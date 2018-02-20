@@ -6,9 +6,12 @@ socket_name: lulli
 
 windows:
     - run: npm run start
+    - test:
+        root: ~/code/lulli/backend
+        panes:
+         - npm run watch:test
     - frontend:
         root: ~/code/lulli/frontend
     - backend:
         root: ~/code/lulli/backend
     - git: git status
-    - shell:
