@@ -1,6 +1,8 @@
 import React from 'react';
 
 import './Results.css';
+import Image from './Image';
+import Video from './Video';
 
 export function Results({matches}) {
   if (!matches || matches.length === 0) {
@@ -23,14 +25,4 @@ function toMediaElem(match, idx) {
     default:
       return null;
   }
-}
-
-function Image({image}) {
-  const {filename, url} = image;
-  return <img src={url} alt={filename} title={filename} />;
-}
-
-function Video({video}) {
-  const {url} = video;
-  return <video controls><source src={url} /></video>;
 }
