@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {makeTitle} from './utils';
+
 export default function Image({image}) {
   const {filename, url, year} = image;
   const title = makeTitle(filename, year);
@@ -9,10 +11,4 @@ export default function Image({image}) {
       <figcaption>{title}</figcaption>
     </figure>
   );
-}
-
-function makeTitle(filename, year) {
-  const name = filename.replace(/\.[^.]*$/, '');
-  const withSpaces = name.replace(/_/g, ' ');
-  return `${withSpaces} (${year})`;
 }
