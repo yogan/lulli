@@ -5,7 +5,7 @@ import {Results} from './Results';
 export class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {searchText: '', matches: []};
+    this.state = {searchText: '', matches: null}
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,6 +27,9 @@ export class Search extends Component {
   }
 
   render() {
+    const {matches} = this.state;
+    const maybeResults = matches === null ? null : <Results matches={matches}/>;
+
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -38,8 +41,7 @@ export class Search extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-
-        <Results matches={this.state.matches}/>
+        {maybeResults}
       </div>
     );
   }

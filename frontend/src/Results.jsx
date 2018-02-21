@@ -6,7 +6,7 @@ import Video from './Video';
 
 export function Results({matches}) {
   if (!matches || matches.length === 0) {
-    return null;
+    return <p>Nothing found. Oh no.</p>;
   }
 
   return (
