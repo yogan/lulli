@@ -1,8 +1,8 @@
 import React from 'react';
 
 import './Results.css';
-import Image from './Image';
-import Video from './Video';
+
+import TitledMedia from './TitledMedia';
 
 export function Results({matches}) {
   if (!matches || matches.length === 0) {
@@ -11,7 +11,8 @@ export function Results({matches}) {
 
   matches.sort((left, right) => newestTimestampsFirst(left, right));
 
-  const media = matches.map((match, idx) => toMediaElem(match, idx));
+  const media = matches.map((match, idx) =>
+    <TitledMedia match={match} key={idx} />);
 
   return (
     <div className="results">
@@ -27,15 +28,4 @@ function newestTimestampsFirst(left, right) {
     return -1;
   }
   return 0;
-}
-
-function toMediaElem(match, idx) {
-  switch (match.type) {
-    case 'image':
-      return <Image key={idx} image={match} />;
-    case 'video':
-      return <Video key={idx} video={match} />;
-    default:
-      return null;
-  }
 }
