@@ -9,11 +9,19 @@ export function Results({matches}) {
     return <p>Nothing found. Oh no.</p>;
   }
 
+  const media = matches
+    .sort((left, right) => newestTimestampsFirst(left, right))
+    .map((match, idx) => toMediaElem(match, idx));
+
   return (
     <div className="results">
-      {matches.map((match, idx) => toMediaElem(match, idx))}
+      {media}
     </div>
   );
+}
+
+function newestTimestampsFirst(left, right) {
+  return left.timestamp < right.timestamp;
 }
 
 function toMediaElem(match, idx) {

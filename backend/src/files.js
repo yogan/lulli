@@ -37,7 +37,7 @@ function search(searchTerms) {
 
   const subdirMatches = subdirs.map(subdir => {
     return getMatchesInDir(rootPath, subdir, searchTerms)
-      .map(filename => addMetaData(subdir, filename));
+      .map(filename => addMetaData(rootPath, subdir, filename));
   });
 
   const matchesWithRelativePaths = flatten(subdirMatches);
@@ -45,17 +45,23 @@ function search(searchTerms) {
   return addTypes(matchesWithRelativePaths);
 }
 
-function addMetaData(subdir, filename) {
+function addMetaData(rootPath, subdir, filename) {
   return {
     filename,
-    url: toUrl(subdir, filename),
-    year: subdir
+    url:       toUrl(subdir, filename),
+    timestamp: getTimestamp(rootPath, subdir, filename),
+    year:      subdir
   };
 }
 
 function toUrl(subdir, filename) {
   const baseUrl = config.get('baseUrl');
   return `${baseUrl}/${subdir}/${filename}`;
+}
+
+function getTimestamp(rootPath, subdir, filename) {
+  const stats = fs.statSync(`${rootPath}/${subdir}/${filename}`);
+  return stats.ctime;
 }
 
 function getSubdirs(path) {
