@@ -9,9 +9,9 @@ export function Results({matches}) {
     return <p>Nothing found. Oh no.</p>;
   }
 
-  const media = matches
-    .sort((left, right) => newestTimestampsFirst(left, right))
-    .map((match, idx) => toMediaElem(match, idx));
+  matches.sort((left, right) => newestTimestampsFirst(left, right));
+
+  const media = matches.map((match, idx) => toMediaElem(match, idx));
 
   return (
     <div className="results">
@@ -21,7 +21,12 @@ export function Results({matches}) {
 }
 
 function newestTimestampsFirst(left, right) {
-  return left.timestamp < right.timestamp;
+  if (left.timestamp < right.timestamp) {
+    return 1;
+  } else if (left.timestamp > right.timestamp) {
+    return -1;
+  }
+  return 0;
 }
 
 function toMediaElem(match, idx) {
