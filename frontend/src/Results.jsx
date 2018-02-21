@@ -3,6 +3,7 @@ import React from 'react';
 import './Results.css';
 
 import TitledMedia from './TitledMedia';
+import { newestTimestampsFirst } from './utils';
 
 export function Results({matches}) {
   if (!matches || matches.length === 0) {
@@ -19,13 +20,4 @@ export function Results({matches}) {
       {media}
     </div>
   );
-}
-
-function newestTimestampsFirst(left, right) {
-  if (left.timestamp < right.timestamp) {
-    return 1;
-  } else if (left.timestamp > right.timestamp) {
-    return -1;
-  }
-  return 0;
 }
