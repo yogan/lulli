@@ -61,7 +61,7 @@ function toUrl(subdir, filename) {
 
 function getTimestamp(rootPath, subdir, filename) {
   const stats = fs.statSync(`${rootPath}/${subdir}/${filename}`);
-  return stats.ctime;
+  return stats.mtime;
 }
 
 function getSubdirs(path) {
