@@ -37,16 +37,20 @@ function search(searchTerms) {
 
   const subdirMatches = subdirs.map(subdir => {
     return getMatchesInDir(rootPath, subdir, searchTerms)
-      .map(filename => ({
-        filename,
-        url: toUrl(subdir, filename),
-        year: subdir
-      }));
+      .map(filename => addMetaData(subdir, filename));
   });
 
   const matchesWithRelativePaths = flatten(subdirMatches);
 
   return addTypes(matchesWithRelativePaths);
+}
+
+function addMetaData(subdir, filename) {
+  return {
+    filename,
+    url: toUrl(subdir, filename),
+    year: subdir
+  };
 }
 
 function toUrl(subdir, filename) {
