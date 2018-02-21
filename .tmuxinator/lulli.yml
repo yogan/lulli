@@ -5,7 +5,7 @@ root: ~/code/lulli/
 socket_name: lulli
 
 windows:
-    - run: npm run start
+    - run: npm run start:dev
     - test:
         root: ~/code/lulli/backend
         panes:

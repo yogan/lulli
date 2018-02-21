@@ -1,10 +1,19 @@
 const express = require('express');
-const files   = require('./files');
+const path    = require('path');
 
+const files   = require('./files');
 
 files.tryGetRootPath();
 
 const app = express();
+
+const frontendPath = path.join(__dirname, '../../frontend/build');
+
+app.use(express.static(frontendPath));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 app.get('/api/search', (req, res) => {
   const searchString = req.query.q.trim();

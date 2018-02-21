@@ -4,9 +4,11 @@
   "private": true,
   "author": "Frank Blendinger",
   "scripts": {
-    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start:dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start:prod": "npm run frontend:build && npm run backend",
     "backend": "cd backend && npm run start",
-    "frontend": "cd frontend && npm run start"
+    "frontend": "cd frontend && npm run start",
+    "frontend:build": "cd frontend && npm run build"
   },
   "dependencies": {},
   "devDependencies": {
