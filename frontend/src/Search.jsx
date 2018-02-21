@@ -18,6 +18,11 @@ export class Search extends Component {
   async handleSubmit(event) {
     event.preventDefault();
 
+    // clear the matches, as for video elements, there is a weird bug
+    // which cause the first shown video to stay when the first element
+    // of the new search result is also (another) video
+    this.setState({matches: null});
+
     const query = queryString.stringify({q: this.state.searchText});
 
     const response = await fetch(`/api/search?${query}`);
