@@ -23,6 +23,12 @@ export class Search extends Component {
     const response = await fetch(`/api/search?${query}`);
     const matches  = await response.json();
 
+    if (matches && matches.length > 0) {
+      // remove keyboard focus from input box to be able to scroll on page,
+      // but only when there are some results
+      this.input.blur();
+    }
+
     this.setState({matches});
   }
 
@@ -34,7 +40,10 @@ export class Search extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            <input type="text"
+            <input
+              type="text"
+              autoFocus
+              ref={input => this.input = input}
               value={this.state.searchText}
               onChange={this.handleChange}
             />
