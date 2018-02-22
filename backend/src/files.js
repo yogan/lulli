@@ -3,12 +3,11 @@ const config = require('config');
 const fs     = require('fs');
 const path   = require('path');
 
-const { allTermsMatch } = require('./matcher');
 
-module.exports.tryGetRootPath  = tryGetRootPath;
-module.exports.getMatchesInDir = getMatchesInDir;
-module.exports.getSubdirs      = getSubdirs;
-module.exports.getTimestamp    = getTimestamp;
+module.exports.tryGetRootPath = tryGetRootPath;
+module.exports.getSubdirs     = getSubdirs;
+module.exports.getTimestamp   = getTimestamp;
+module.exports.listFiles      = listFiles;
 
 let rootPath = null;
 
@@ -39,11 +38,8 @@ function getSubdirs() {
     .filter(entry => isDirectory(path.join(rootPath, entry)));
 }
 
-// TODO split this, allTermsMatch should be used in search.js
-function getMatchesInDir(subdir, searchTerms) {
-  return fs
-    .readdirSync(path.join(rootPath, subdir))
-    .filter(filename => allTermsMatch(filename, searchTerms));
+function listFiles(subdir) {
+  return fs.readdirSync(path.join(rootPath, subdir));
 }
 
 function isDirectory(pathname) {
