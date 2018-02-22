@@ -13,8 +13,7 @@ let rootPath = null;
 function tryGetRootPath() {
   try {
     rootPath = config.get('rootPath');
-    const isDir = fs.statSync(rootPath).isDirectory();
-    if (!isDir) {
+    if(!isDirectory(rootPath)) {
       exitRootPathMissing(rootPath);
     }
   } catch(e) {
@@ -67,13 +66,17 @@ function getTimestamp(subdir, filename) {
 function getSubdirs() {
   return fs
     .readdirSync(rootPath)
-    .filter(entry => fs.statSync(path.join(rootPath, entry)).isDirectory());
+    .filter(entry => isDirectory(path.join(rootPath, entry)));
 }
 
 function getMatchesInDir(subdir, searchTerms) {
   return fs
     .readdirSync(path.join(rootPath, subdir))
     .filter(filename => allTermsMatch(filename, searchTerms));
+}
+
+function isDirectory(pathname) {
+  return fs.statSync(pathname).isDirectory();
 }
 
 function flatten(array) {
