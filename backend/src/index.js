@@ -1,9 +1,11 @@
+// @ts-check
 const express = require('express');
 const path    = require('path');
 
-const files   = require('./files');
+const { tryGetRootPath } = require('./files');
+const { search }         = require('./search');
 
-files.tryGetRootPath();
+tryGetRootPath();
 
 const app = express();
 
@@ -29,7 +31,7 @@ app.get('/api/search', (req, res) => {
     return;
   }
 
-  const results = files.search(searchTerms);
+  const results = search(searchTerms);
   res.send(results);
 });
 

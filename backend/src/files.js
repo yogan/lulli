@@ -1,12 +1,14 @@
-const config          = require('config');
-const fs              = require('fs');
-const path            = require('path');
+// @ts-check
+const config = require('config');
+const fs     = require('fs');
+const path   = require('path');
 
-const {addTypes}      = require('./filetypes');
-const {allTermsMatch} = require('./matcher');
+const { allTermsMatch } = require('./matcher');
 
-module.exports.search         = search;
-module.exports.tryGetRootPath = tryGetRootPath;
+module.exports.tryGetRootPath  = tryGetRootPath;
+module.exports.getMatchesInDir = getMatchesInDir;
+module.exports.getSubdirs      = getSubdirs;
+module.exports.getTimestamp    = getTimestamp;
 
 let rootPath = null;
 
@@ -26,38 +28,6 @@ function exitRootPathMissing(rootPath) {
   process.exit(1);
 }
 
-function search(searchTerms) {
-  const subdirs = getSubdirs();
-
-  if (!subdirs || subdirs.length === 0) {
-    console.warn(`no subdirs found in rootPath '${rootPath}'`);
-    return [];
-  }
-
-  const subdirMatches = subdirs.map(subdir => {
-    return getMatchesInDir(subdir, searchTerms)
-      .map(filename => addMetaData(subdir, filename));
-  });
-
-  const matchesWithRelativePaths = flatten(subdirMatches);
-
-  return addTypes(matchesWithRelativePaths);
-}
-
-function addMetaData(subdir, filename) {
-  return {
-    filename,
-    url:       toUrl(subdir, filename),
-    timestamp: getTimestamp(subdir, filename),
-    year:      subdir
-  };
-}
-
-function toUrl(subdir, filename) {
-  const baseUrl = config.get('baseUrl');
-  return path.join(baseUrl, subdir, filename);
-}
-
 function getTimestamp(subdir, filename) {
   const stats = fs.statSync(path.join(rootPath, subdir, filename));
   return stats.mtime;
@@ -69,6 +39,7 @@ function getSubdirs() {
     .filter(entry => isDirectory(path.join(rootPath, entry)));
 }
 
+// TODO split this, allTermsMatch should be used in search.js
 function getMatchesInDir(subdir, searchTerms) {
   return fs
     .readdirSync(path.join(rootPath, subdir))
@@ -77,8 +48,4 @@ function getMatchesInDir(subdir, searchTerms) {
 
 function isDirectory(pathname) {
   return fs.statSync(pathname).isDirectory();
-}
-
-function flatten(array) {
-  return [].concat(...array);
 }
