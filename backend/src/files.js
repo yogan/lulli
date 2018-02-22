@@ -1,5 +1,6 @@
 const config          = require('config');
 const fs              = require('fs');
+const path            = require('path');
 
 const {addTypes}      = require('./filetypes');
 const {allTermsMatch} = require('./matcher');
@@ -55,23 +56,23 @@ function addMetaData(subdir, filename) {
 
 function toUrl(subdir, filename) {
   const baseUrl = config.get('baseUrl');
-  return `${baseUrl}/${subdir}/${filename}`;
+  return path.join(baseUrl, subdir, filename);
 }
 
 function getTimestamp(subdir, filename) {
-  const stats = fs.statSync(`${rootPath}/${subdir}/${filename}`);
+  const stats = fs.statSync(path.join(rootPath, subdir, filename));
   return stats.mtime;
 }
 
 function getSubdirs() {
   return fs
     .readdirSync(rootPath)
-    .filter(entry => fs.statSync(`${rootPath}/${entry}`).isDirectory());
+    .filter(entry => fs.statSync(path.join(rootPath, entry)).isDirectory());
 }
 
 function getMatchesInDir(subdir, searchTerms) {
   return fs
-    .readdirSync(`${rootPath}/${subdir}`)
+    .readdirSync(path.join(rootPath, subdir))
     .filter(filename => allTermsMatch(filename, searchTerms));
 }
 
