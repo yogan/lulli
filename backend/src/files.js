@@ -16,7 +16,6 @@ function tryGetRootPath() {
     if (!isDir) {
       exitRootPathMissing(rootPath);
     }
-    return rootPath;
   } catch(e) {
     exitRootPathMissing(rootPath);
   }
@@ -28,7 +27,7 @@ function exitRootPathMissing(rootPath) {
 }
 
 function search(searchTerms) {
-  const subdirs = getSubdirs(rootPath);
+  const subdirs = getSubdirs();
 
   if (!subdirs || subdirs.length === 0) {
     console.warn(`no subdirs found in rootPath '${rootPath}'`);
@@ -36,8 +35,8 @@ function search(searchTerms) {
   }
 
   const subdirMatches = subdirs.map(subdir => {
-    return getMatchesInDir(rootPath, subdir, searchTerms)
-      .map(filename => addMetaData(rootPath, subdir, filename));
+    return getMatchesInDir(subdir, searchTerms)
+      .map(filename => addMetaData(subdir, filename));
   });
 
   const matchesWithRelativePaths = flatten(subdirMatches);
@@ -45,11 +44,11 @@ function search(searchTerms) {
   return addTypes(matchesWithRelativePaths);
 }
 
-function addMetaData(rootPath, subdir, filename) {
+function addMetaData(subdir, filename) {
   return {
     filename,
     url:       toUrl(subdir, filename),
-    timestamp: getTimestamp(rootPath, subdir, filename),
+    timestamp: getTimestamp(subdir, filename),
     year:      subdir
   };
 }
@@ -59,18 +58,18 @@ function toUrl(subdir, filename) {
   return `${baseUrl}/${subdir}/${filename}`;
 }
 
-function getTimestamp(rootPath, subdir, filename) {
+function getTimestamp(subdir, filename) {
   const stats = fs.statSync(`${rootPath}/${subdir}/${filename}`);
   return stats.mtime;
 }
 
-function getSubdirs(path) {
+function getSubdirs() {
   return fs
-    .readdirSync(path)
-    .filter(filename => fs.statSync(`${path}/${filename}`).isDirectory());
+    .readdirSync(rootPath)
+    .filter(entry => fs.statSync(`${rootPath}/${entry}`).isDirectory());
 }
 
-function getMatchesInDir(rootPath, subdir, searchTerms) {
+function getMatchesInDir(subdir, searchTerms) {
   return fs
     .readdirSync(`${rootPath}/${subdir}`)
     .filter(filename => allTermsMatch(filename, searchTerms));
