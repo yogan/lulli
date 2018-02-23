@@ -14,6 +14,7 @@ let subdirs  = null;
 function initializeCache() {
   findRootPath();
   findSubdirs();
+  watchRootdirForChanges();
 }
 
 function findRootPath() {
@@ -33,12 +34,19 @@ function findSubdirs() {
     .filter(entry => isDirectory(path.join(rootPath, entry)));
 
   if (!subdirs || subdirs.length === 0) {
-    exitNoSubdirs();
+    console.log('WARNING - no subdirs found in rootPath, searching will never yield any results!');
+    subdirs = [];
   }
+
+  console.log('updated subdirs to: ', subdirs);
 }
 
 function getSubdirs() {
   return subdirs;
+}
+
+function watchRootdirForChanges() {
+  fs.watch(rootPath, {}, () => findSubdirs());
 }
 
 function listFiles(subdir) {
@@ -47,7 +55,15 @@ function listFiles(subdir) {
 }
 
 function isDirectory(pathname) {
-  return fs.statSync(pathname).isDirectory();
+  try {
+    return fs.statSync(pathname).isDirectory();
+  } catch (e) {
+    // This catch block addresses a race condition:
+    // between reading the rootPath for subdirs, and passing the entries
+    // to this function, the entry might vanish. In this case, 'false' is
+    // actually the right result.
+    return false;
+  }
 }
 
 function getTimestamp(subdir, filename) {
@@ -57,10 +73,5 @@ function getTimestamp(subdir, filename) {
 
 function exitRootPathMissing(rootPath) {
   console.log(`The 'rootPath' config value has to point to a directory (value in config was '${rootPath}')`);
-  process.exit(1);
-}
-
-function exitNoSubdirs() {
-  console.log('No subdirs below rootPath found.');
   process.exit(1);
 }
