@@ -4,8 +4,7 @@ const path           = require('path');
 const { URL, parse } = require('url');
 
 const {
-  listFiles,
-  getSubdirs,
+  getFilenamesOfSubdirs,
   getTimestamp
 }                       = require('./files');
 const { addTypes }      = require('./filetypes');
@@ -15,13 +14,14 @@ const { flatten }       = require('./utils');
 module.exports.search = search;
 
 function search(searchTerms) {
-  const subdirs = getSubdirs();
+  const filenamesOfSubdirs = getFilenamesOfSubdirs();
 
-  const subdirMatches = subdirs.map(subdir => {
-    return listFiles(subdir)
-      .filter(filename => allTermsMatch(filename, searchTerms))
-      .map(filename => addMetaData(subdir, filename));
-  });
+  const subdirMatches = Object.keys(filenamesOfSubdirs)
+    .map(subdir => {
+      return filenamesOfSubdirs[subdir]
+        .filter(filename => allTermsMatch(filename, searchTerms))
+        .map(filename => addMetaData(subdir, filename));
+    });
 
   return addTypes(flatten(subdirMatches));
 }

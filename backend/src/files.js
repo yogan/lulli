@@ -3,17 +3,22 @@ const config = require('config');
 const fs     = require('fs');
 const path   = require('path');
 
-module.exports.initializeCache = initializeCache;
-module.exports.getSubdirs      = getSubdirs;
-module.exports.getTimestamp    = getTimestamp;
-module.exports.listFiles       = listFiles;
+module.exports = {
+  initializeCache,
+  getFilenamesOfSubdirs,
+  getTimestamp
+};
 
 let rootPath = null;
 let subdirs  = null;
+let filenameCache = {};
 
 function initializeCache() {
   findRootPath();
   findSubdirs();
+
+  populateFilenameCache();
+
   watchRootdirForChanges();
 }
 
@@ -45,12 +50,21 @@ function getSubdirs() {
   return subdirs;
 }
 
+function populateFilenameCache() {
+  subdirs.forEach(subdir => {
+    filenameCache[subdir] = listFiles(subdir);
+  });
+}
+
+function getFilenamesOfSubdirs() {
+  return filenameCache;
+}
+
 function watchRootdirForChanges() {
   fs.watch(rootPath, {}, () => findSubdirs());
 }
 
 function listFiles(subdir) {
-  // TODO: this could be cached
   return fs.readdirSync(path.join(rootPath, subdir));
 }
 
