@@ -1,3 +1,4 @@
+// @ts-check
 module.exports.addTypes = addTypes;
 
 function addTypes(matches) {

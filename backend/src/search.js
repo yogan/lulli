@@ -3,7 +3,6 @@ const config         = require('config');
 const path           = require('path');
 const { URL, parse } = require('url');
 
-
 const {
   listFiles,
   getSubdirs,

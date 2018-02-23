@@ -1,3 +1,4 @@
+// @ts-check
 module.exports.allTermsMatch = allTermsMatch;
 
 function allTermsMatch(filename, searchTerms) {
