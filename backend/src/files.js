@@ -9,17 +9,15 @@ module.exports = {
   getTimestamp
 };
 
-let rootPath = null;
-let subdirs  = null;
-let filenameCache = {};
+let rootPath       = null;
+let subdirs        = null;
+let subdirWatchers = [];
+let filenameCache  = {};
 
 function initializeCache() {
   findRootPath();
-  findSubdirs();
-
-  populateFilenameCache();
-
   watchRootdirForChanges();
+  findAndWatchSubdirs();
 }
 
 function findRootPath() {
@@ -33,27 +31,37 @@ function findRootPath() {
   }
 }
 
-function findSubdirs() {
-  subdirs = fs
+function findAndWatchSubdirs() {
+  const newSubdirs = fs
     .readdirSync(rootPath)
     .filter(entry => isDirectory(path.join(rootPath, entry)));
 
-  if (!subdirs || subdirs.length === 0) {
+  if (!newSubdirs || newSubdirs.length === 0) {
     console.log('WARNING - no subdirs found in rootPath, searching will never yield any results!');
     subdirs = [];
   }
 
-  console.log('updated subdirs to: ', subdirs);
+  // TODO skip if arrays equal
+  subdirs = newSubdirs;
+  console.log('Considering files in: ', subdirs);
+  resetAndPopulateFilenameCache();
+  watchSubdirsForChanges();
 }
 
 function getSubdirs() {
   return subdirs;
 }
 
-function populateFilenameCache() {
-  subdirs.forEach(subdir => {
-    filenameCache[subdir] = listFiles(subdir);
-  });
+function resetAndPopulateFilenameCache() {
+  console.log('Starting with a fresh filename cache.');
+  filenameCache = {};
+  subdirs.forEach(subdir => updateSubdirInCache(subdir));
+}
+
+function updateSubdirInCache(subdir) {
+  filenameCache[subdir] = listFiles(subdir);
+  const fileCount = filenameCache[subdir].length;
+  console.log(`Updated filename cache for subdir '${subdir}' (${fileCount} entries).`);
 }
 
 function getFilenamesOfSubdirs() {
@@ -61,11 +69,26 @@ function getFilenamesOfSubdirs() {
 }
 
 function watchRootdirForChanges() {
-  fs.watch(rootPath, {}, () => findSubdirs());
+  fs.watch(rootPath, {}, () => findAndWatchSubdirs());
+}
+
+function watchSubdirsForChanges() {
+  subdirWatchers = subdirs.map(subdir => {
+    fs.watch(path.join(rootPath, subdir), {}, () => updateSubdirInCache(subdir));
+  });
 }
 
 function listFiles(subdir) {
-  return fs.readdirSync(path.join(rootPath, subdir));
+  try {
+    return fs.readdirSync(path.join(rootPath, subdir));
+  } catch (e) {
+    // This catch block addresses a race condition:
+    // Between detection of a change in a directory, and calling this function,
+    // the directory might have been deleted. It's fine to treat it as empty
+    // in that case.
+    console.log(`WARN: directory '${subdir}' could not be read`);
+    return [];
+  }
 }
 
 function isDirectory(pathname) {
@@ -73,7 +96,7 @@ function isDirectory(pathname) {
     return fs.statSync(pathname).isDirectory();
   } catch (e) {
     // This catch block addresses a race condition:
-    // between reading the rootPath for subdirs, and passing the entries
+    // Between reading the rootPath for subdirs, and passing the entries
     // to this function, the entry might vanish. In this case, 'false' is
     // actually the right result.
     return false;
