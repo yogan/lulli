@@ -2,10 +2,10 @@
 const express = require('express');
 const path    = require('path');
 
-const { tryGetRootPath } = require('./files');
-const { search }         = require('./search');
+const { initializeCache } = require('./files');
+const { search }          = require('./search');
 
-tryGetRootPath();
+initializeCache();
 
 const app = express();
 

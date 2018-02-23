@@ -3,28 +3,51 @@ const config = require('config');
 const fs     = require('fs');
 const path   = require('path');
 
-
-module.exports.tryGetRootPath = tryGetRootPath;
-module.exports.getSubdirs     = getSubdirs;
-module.exports.getTimestamp   = getTimestamp;
-module.exports.listFiles      = listFiles;
+module.exports.initializeCache = initializeCache;
+module.exports.getSubdirs      = getSubdirs;
+module.exports.getTimestamp    = getTimestamp;
+module.exports.listFiles       = listFiles;
 
 let rootPath = null;
+let subdirs  = null;
 
-function tryGetRootPath() {
+function initializeCache() {
+  findRootPath();
+  findSubdirs();
+}
+
+function findRootPath() {
   try {
     rootPath = config.get('rootPath');
-    if(!isDirectory(rootPath)) {
+    if (!isDirectory(rootPath)) {
       exitRootPathMissing(rootPath);
     }
-  } catch(e) {
+  } catch (e) {
     exitRootPathMissing(rootPath);
   }
 }
 
-function exitRootPathMissing(rootPath) {
-  console.log(`The 'rootPath' config value has to point to a directory (value in config was '${rootPath}')`);
-  process.exit(1);
+function findSubdirs() {
+  subdirs = fs
+    .readdirSync(rootPath)
+    .filter(entry => isDirectory(path.join(rootPath, entry)));
+
+  if (!subdirs || subdirs.length === 0) {
+    exitNoSubdirs();
+  }
+}
+
+function getSubdirs() {
+  return subdirs;
+}
+
+function listFiles(subdir) {
+  // TODO: this could be cached
+  return fs.readdirSync(path.join(rootPath, subdir));
+}
+
+function isDirectory(pathname) {
+  return fs.statSync(pathname).isDirectory();
 }
 
 function getTimestamp(subdir, filename) {
@@ -32,16 +55,12 @@ function getTimestamp(subdir, filename) {
   return stats.mtime;
 }
 
-function getSubdirs() {
-  return fs
-    .readdirSync(rootPath)
-    .filter(entry => isDirectory(path.join(rootPath, entry)));
+function exitRootPathMissing(rootPath) {
+  console.log(`The 'rootPath' config value has to point to a directory (value in config was '${rootPath}')`);
+  process.exit(1);
 }
 
-function listFiles(subdir) {
-  return fs.readdirSync(path.join(rootPath, subdir));
-}
-
-function isDirectory(pathname) {
-  return fs.statSync(pathname).isDirectory();
+function exitNoSubdirs() {
+  console.log('No subdirs below rootPath found.');
+  process.exit(1);
 }

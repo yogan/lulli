@@ -17,11 +17,6 @@ module.exports.search = search;
 function search(searchTerms) {
   const subdirs = getSubdirs();
 
-  if (!subdirs || subdirs.length === 0) {
-    console.warn('no subdirs found in rootPath');
-    return [];
-  }
-
   const subdirMatches = subdirs.map(subdir => {
     return listFiles(subdir)
       .filter(filename => allTermsMatch(filename, searchTerms))
