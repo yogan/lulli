@@ -3,14 +3,16 @@ const config = require('config');
 const fs     = require('fs');
 const path   = require('path');
 
+const { arraysAreEqual } = require('./utils');
+
 module.exports = {
   initializeCache,
   getFilenamesOfSubdirs,
   getTimestamp
 };
 
-let rootPath       = null;
-let subdirs        = null;
+let rootPath       = undefined;
+let subdirs        = undefined;
 let subdirWatchers = [];
 let filenameCache  = {};
 
@@ -32,20 +34,31 @@ function findRootPath() {
 }
 
 function findAndWatchSubdirs() {
-  const newSubdirs = fs
+  const newSubdirs = findSubdirs();
+
+  if (arraysAreEqual(subdirs, newSubdirs)) {
+    return;
+  }
+
+  subdirs = newSubdirs;
+  console.log('Considering files in: ', subdirs);
+
+  stopAndDeleteSubdirWatchers();
+  resetAndPopulateFilenameCache();
+  watchSubdirsForChanges();
+}
+
+function findSubdirs() {
+  const subdirs = fs
     .readdirSync(rootPath)
     .filter(entry => isDirectory(path.join(rootPath, entry)));
 
-  if (!newSubdirs || newSubdirs.length === 0) {
+  if (!subdirs || subdirs.length === 0) {
     console.log('WARNING - no subdirs found in rootPath, searching will never yield any results!');
-    subdirs = [];
+    return [];
   }
 
-  // TODO skip if arrays equal
-  subdirs = newSubdirs;
-  console.log('Considering files in: ', subdirs);
-  resetAndPopulateFilenameCache();
-  watchSubdirsForChanges();
+  return subdirs;
 }
 
 function getSubdirs() {
@@ -73,9 +86,14 @@ function watchRootdirForChanges() {
 }
 
 function watchSubdirsForChanges() {
-  subdirWatchers = subdirs.map(subdir => {
-    fs.watch(path.join(rootPath, subdir), {}, () => updateSubdirInCache(subdir));
-  });
+  subdirWatchers = subdirs.map(subdir => (
+    fs.watch(path.join(rootPath, subdir), {}, () => updateSubdirInCache(subdir))
+  ));
+}
+
+function stopAndDeleteSubdirWatchers() {
+  subdirWatchers.forEach(watcher => watcher.close());
+  subdirWatchers = [];
 }
 
 function listFiles(subdir) {
