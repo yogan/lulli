@@ -2,7 +2,7 @@ import queryString          from 'query-string';
 import React, { Component } from 'react';
 
 import { Results }          from './Results';
-import { Suggestions }      from './Suggestions';
+import { ResultPreview }    from './ResultPreview';
 
 export class Search extends Component {
   constructor(props) {
@@ -81,7 +81,7 @@ export class Search extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        <Suggestions suggestions={suggestions} />
+        <ResultPreview matches={suggestions} />
         <Results matches={matches} />
       </div>
     );

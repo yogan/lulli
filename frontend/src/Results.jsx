@@ -5,7 +5,7 @@ import './Results.css';
 import TitledMedia from './TitledMedia';
 import { newestTimestampsFirst } from './utils';
 
-const MAX_RESULTS = 100;
+const MAX_ENTRIES = 100;
 
 export function Results({matches}) {
   if (!matches) {
@@ -20,11 +20,11 @@ export function Results({matches}) {
 
   relevantMatches.sort((left, right) => newestTimestampsFirst(left, right));
 
-  const limitedMatches = relevantMatches.slice(0, MAX_RESULTS);
+  const limitedMatches = relevantMatches.slice(0, MAX_ENTRIES);
 
-  const resultsMissing = relevantMatches.length > MAX_RESULTS
+  const resultsMissing = relevantMatches.length > MAX_ENTRIES
     ? <p className="results-missing">
-        {`Results limited to the first ${MAX_RESULTS} matches.`}
+        {`Results limited to the first ${MAX_ENTRIES} matches.`}
       </p>
     : null;
 
