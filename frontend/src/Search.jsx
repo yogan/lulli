@@ -32,7 +32,7 @@ export class Search extends Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     if (!searchText.trim()) {
       return;
@@ -56,7 +56,7 @@ export class Search extends Component {
 
   async queryMatches(searchText) {
     try {
-      const query    = queryString.stringify({q: searchText});
+      const query    = queryString.stringify({ q: searchText });
       const response = await fetch(`/api/search?${query}`);
       return await response.json();
     } catch (e) {
@@ -66,7 +66,7 @@ export class Search extends Component {
   }
 
   render() {
-    const {matches, suggestions} = this.state;
+    const { matches, suggestions } = this.state;
 
     return (
       <div>

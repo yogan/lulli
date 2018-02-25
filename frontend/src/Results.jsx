@@ -1,13 +1,13 @@
-import React from 'react';
+import React                     from 'react';
+
+import TitledMedia               from './TitledMedia';
+import { newestTimestampsFirst } from './utils';
 
 import './Results.css';
 
-import TitledMedia from './TitledMedia';
-import { newestTimestampsFirst } from './utils';
-
 const MAX_ENTRIES = 100;
 
-export function Results({matches}) {
+export function Results({ matches }) {
   if (!matches) {
     return null;
   }

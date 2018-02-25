@@ -4,7 +4,7 @@ import './ResultPreview.css';
 
 const MAX_ENTRIES = 10;
 
-export function ResultPreview({matches}) {
+export function ResultPreview({ matches }) {
   if (!matches) {
     return null;
   }
