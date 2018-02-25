@@ -22,7 +22,7 @@ export class Search extends Component {
     const searchText = event.target.value;
     this.setState({ searchText });
 
-    if (!searchText.trim()) {
+    if (searchText.trim().length < 2) {
       this.setState({ preview: null });
       return;
     }
