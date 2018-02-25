@@ -4,7 +4,7 @@ module.exports = {
   flatten
 };
 
-function arraysAreEqual(leftArray, rightArray) {
+function arraysAreEqual(leftArray = [], rightArray = []) {
   const leftIsInRight = leftArray.reduce((acc, cur) => (
     acc && rightArray.includes(cur)
   ), true);

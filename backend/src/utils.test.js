@@ -51,6 +51,25 @@ test('arraysAreEqual() returns false for a non empty and an empty array', t => {
   t.false(result);
 });
 
+test('arraysAreEqual() returns true for an empty array and undefined', t => {
+  const array1 = [];
+  const array2 = undefined
+
+  const result = arraysAreEqual(array1, array2);
+
+  t.true(result);
+});
+
+test('arraysAreEqual() returns false for a non empty array and undefined', t => {
+  const array1 = [42];
+  const array2 = undefined
+
+  const result = arraysAreEqual(array1, array2);
+
+  t.false(result);
+});
+
+
 test('flatten() flattens an array of arrays', t => {
   const arrayOfArrays = [
     [1, 2, 3],
