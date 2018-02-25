@@ -7,3 +7,8 @@ img, video {
   border: 1px dashed;
   margin: 0.2em;
 }
+
+.results-missing {
+  font-style: italic;
+  font-size:  80%
+}
