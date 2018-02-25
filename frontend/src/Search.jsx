@@ -68,14 +68,6 @@ export class Search extends Component {
   render() {
     const {matches, suggestions} = this.state;
 
-    const maybeResults = matches === null
-      ? null
-      : <Results matches={matches} />;
-
-    const maybeSuggestions = suggestions === null
-      ? null
-      : <Suggestions suggestions={suggestions} />;
-
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -89,8 +81,8 @@ export class Search extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        {maybeSuggestions}
-        {maybeResults}
+        <Suggestions suggestions={suggestions} />
+        <Results matches={matches} />
       </div>
     );
   }
