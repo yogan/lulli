@@ -1,32 +1,49 @@
-import queryString from 'query-string';
+import queryString          from 'query-string';
 import React, { Component } from 'react';
-import {Results} from './Results';
+
+import { Results }          from './Results';
+import { Suggestions }      from './Suggestions';
 
 export class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {searchText: '', matches: null}
+    this.state = {
+      searchText:  '',
+      suggestions: null,
+      matches:     null
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({searchText: event.target.value});
+  async handleChange(event) {
+    const searchText = event.target.value;
+    this.setState({ searchText });
+
+    if (!searchText.trim()) {
+      this.setState({ suggestions: null });
+      return;
+    }
+
+    const suggestions = await this.queryMatches(searchText);
+    this.setState({ suggestions });
   }
 
   async handleSubmit(event) {
     event.preventDefault();
+    const {searchText} = this.state;
+
+    if (!searchText.trim()) {
+      return;
+    }
 
     // clear the matches, as for video elements, there is a weird bug
     // which cause the first shown video to stay when the first element
     // of the new search result is also (another) video
-    this.setState({matches: null});
+    this.setState({ matches: null });
 
-    const query = queryString.stringify({q: this.state.searchText});
-
-    const response = await fetch(`/api/search?${query}`);
-    const matches  = await response.json();
+    const matches = await this.queryMatches(searchText);
 
     if (matches && matches.length > 0) {
       // remove keyboard focus from input box to be able to scroll on page,
@@ -34,12 +51,30 @@ export class Search extends Component {
       this.input.blur();
     }
 
-    this.setState({matches});
+    this.setState({ matches, suggestions: null });
+  }
+
+  async queryMatches(searchText) {
+    try {
+      const query    = queryString.stringify({q: searchText});
+      const response = await fetch(`/api/search?${query}`);
+      return await response.json();
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
   }
 
   render() {
-    const {matches} = this.state;
-    const maybeResults = matches === null ? null : <Results matches={matches}/>;
+    const {matches, suggestions} = this.state;
+
+    const maybeResults = matches === null
+      ? null
+      : <Results matches={matches} />;
+
+    const maybeSuggestions = suggestions === null
+      ? null
+      : <Suggestions suggestions={suggestions} />;
 
     return (
       <div>
@@ -49,12 +84,12 @@ export class Search extends Component {
               type="text"
               autoFocus
               ref={input => this.input = input}
-              value={this.state.searchText}
               onChange={this.handleChange}
             />
           </label>
           <input type="submit" value="Submit" />
         </form>
+        {maybeSuggestions}
         {maybeResults}
       </div>
     );

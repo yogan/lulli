@@ -1,0 +1,5 @@
+ul, .suggestions {
+  list-style-type: none;
+  font-family:     monospace;
+  font-size:       90%;
+}
