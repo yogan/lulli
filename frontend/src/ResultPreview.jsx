@@ -11,7 +11,7 @@ export function ResultPreview({ matches }) {
 
   const entries = matches
     .slice(0, MAX_ENTRIES)
-    .map((match, idx) => <li key={idx}>{match.filename}</li>);
+    .map((match, idx) => <li key={idx}>{match.filename} ({match.year})</li>);
 
   const moreMatches = matches.length - MAX_ENTRIES;
 
