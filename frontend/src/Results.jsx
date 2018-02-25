@@ -1,7 +1,6 @@
-import React                     from 'react';
+import React       from 'react';
 
-import TitledMedia               from './TitledMedia';
-import { newestTimestampsFirst } from './utils';
+import TitledMedia from './TitledMedia';
 
 import './Results.css';
 
@@ -12,17 +11,13 @@ export function Results({ matches }) {
     return null;
   }
 
-  const relevantMatches = matches.filter(match => match.type !== 'unknown');
-
-  if (relevantMatches.length === 0) {
+  if (matches.length === 0) {
     return <p>Nothing found. Oh no.</p>;
   }
 
-  relevantMatches.sort((left, right) => newestTimestampsFirst(left, right));
+  const limitedMatches = matches.slice(0, MAX_ENTRIES);
 
-  const limitedMatches = relevantMatches.slice(0, MAX_ENTRIES);
-
-  const resultsMissing = relevantMatches.length > MAX_ENTRIES
+  const resultsMissing = matches.length > MAX_ENTRIES
     ? <p className="results-missing">
         {`Results limited to the first ${MAX_ENTRIES} matches.`}
       </p>

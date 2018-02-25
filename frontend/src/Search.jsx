@@ -1,16 +1,17 @@
-import queryString          from 'query-string';
-import React, { Component } from 'react';
+import queryString              from 'query-string';
+import React, { Component }     from 'react';
 
-import { Results }          from './Results';
-import { ResultPreview }    from './ResultPreview';
+import { Results }              from './Results';
+import { ResultPreview }        from './ResultPreview';
+import { filterAndSortMatches } from './utils';
 
 export class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText:  '',
-      suggestions: null,
-      matches:     null
+      searchText: '',
+      preview:    null,
+      matches:    null
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,12 +23,12 @@ export class Search extends Component {
     this.setState({ searchText });
 
     if (!searchText.trim()) {
-      this.setState({ suggestions: null });
+      this.setState({ preview: null });
       return;
     }
 
-    const suggestions = await this.queryMatches(searchText);
-    this.setState({ suggestions });
+    const preview = await this.queryMatches(searchText);
+    this.setState({ preview });
   }
 
   async handleSubmit(event) {
@@ -51,7 +52,7 @@ export class Search extends Component {
       this.input.blur();
     }
 
-    this.setState({ matches, suggestions: null });
+    this.setState({ matches, preview: null });
   }
 
   async queryMatches(searchText) {
@@ -66,7 +67,10 @@ export class Search extends Component {
   }
 
   render() {
-    const { matches, suggestions } = this.state;
+    const { matches, preview } = this.state;
+
+    const filteredMatches = filterAndSortMatches(matches);
+    const filteredPreview = filterAndSortMatches(preview);
 
     return (
       <div>
@@ -81,8 +85,8 @@ export class Search extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        <ResultPreview matches={suggestions} />
-        <Results matches={matches} />
+        <ResultPreview matches={filteredPreview} />
+        <Results matches={filteredMatches} />
       </div>
     );
   }
