@@ -1,4 +1,6 @@
 // @ts-check
+const escapeStringRegexp = require('escape-string-regexp');
+
 module.exports.allTermsMatch = allTermsMatch;
 
 function allTermsMatch(filename, searchTerms) {
@@ -8,5 +10,6 @@ function allTermsMatch(filename, searchTerms) {
 }
 
 function matches(filename, term) {
-  return !!filename.match(new RegExp(term, "ig"));
+  const escapedTerm = escapeStringRegexp(term);
+  return !!filename.match(new RegExp(escapedTerm, "ig"));
 }
