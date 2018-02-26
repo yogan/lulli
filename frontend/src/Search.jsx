@@ -9,9 +9,9 @@ export class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: '',
-      preview:    null,
-      matches:    null
+      searchText:   '',
+      previewCache: {},
+      matches:      null
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -20,15 +20,27 @@ export class Search extends Component {
 
   async handleChange(event) {
     const searchText = event.target.value;
-    this.setState({ searchText });
+
+    // clearing matches, as we switch to "new search" mode, and display
+    // preview instead
+    this.setState({ searchText, matches: null });
+
+    if (this.state.previewCache[searchText]) {
+      return;
+    }
 
     if (searchText.trim().length < 2) {
-      this.setState({ preview: null });
       return;
     }
 
     const preview = await this.queryMatches(searchText);
-    this.setState({ preview });
+
+    this.setState((prevState) => ({
+      previewCache: {
+        ...prevState.previewCache,
+        [searchText]: preview
+      }
+    }));
   }
 
   async handleSubmit(event) {
@@ -39,11 +51,6 @@ export class Search extends Component {
       return;
     }
 
-    // clear the matches, as for video elements, there is a weird bug
-    // which cause the first shown video to stay when the first element
-    // of the new search result is also (another) video
-    this.setState({ matches: null });
-
     const matches = await this.queryMatches(searchText);
 
     if (matches && matches.length > 0) {
@@ -52,7 +59,7 @@ export class Search extends Component {
       this.input.blur();
     }
 
-    this.setState({ matches, preview: null });
+    this.setState({ matches });
   }
 
   async queryMatches(searchText) {
@@ -67,10 +74,18 @@ export class Search extends Component {
   }
 
   render() {
-    const { matches, preview } = this.state;
+    const { matches, previewCache, searchText } = this.state;
 
-    const filteredMatches = filterAndSortMatches(matches);
-    const filteredPreview = filterAndSortMatches(preview);
+    let previewOrResults;
+
+    if (matches) {
+      const filteredMatches = filterAndSortMatches(matches);
+      previewOrResults = <Results matches={filteredMatches} />
+    } else {
+      const preview = previewCache[searchText];
+      const filteredPreview = filterAndSortMatches(preview);
+      previewOrResults = <ResultPreview matches={filteredPreview} />;
+    }
 
     return (
       <div>
@@ -85,8 +100,7 @@ export class Search extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        <ResultPreview matches={filteredPreview} />
-        <Results matches={filteredMatches} />
+        {previewOrResults}
       </div>
     );
   }

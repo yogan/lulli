@@ -1,5 +1,5 @@
 export function filterAndSortMatches(matches) {
-  if (matches === null) {
+  if (!matches) {
     return matches;
   }
 
