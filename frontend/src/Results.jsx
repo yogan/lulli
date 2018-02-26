@@ -12,7 +12,7 @@ export function Results({ matches }) {
   }
 
   if (matches.length === 0) {
-    return <p>Nothing found. Oh no.</p>;
+    return <NothingFound />
   }
 
   const limitedMatches = matches.slice(0, MAX_ENTRIES);
@@ -30,6 +30,15 @@ export function Results({ matches }) {
     <div className="results">
       {media}
       {resultsMissing}
+    </div>
+  );
+}
+
+function NothingFound() {
+  return (
+    <div>
+      <p>Nothing found. Oh no.</p>
+      <img src="oh_no.png" />
     </div>
   );
 }

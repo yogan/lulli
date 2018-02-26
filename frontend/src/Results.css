@@ -3,8 +3,12 @@
   padding-top: 0.2em;
 }
 
-img, video {
+.result-image {
   border: 1px dashed;
+  margin: 0.2em;
+}
+
+.result-video {
   margin: 0.2em;
 }
 
