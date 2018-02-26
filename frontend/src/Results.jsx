@@ -38,7 +38,7 @@ function NothingFound() {
   return (
     <div>
       <p>Nothing found. Oh no.</p>
-      <img src="oh_no.png" />
+      <img src="oh_no.png" alt="oh no"/>
     </div>
   );
 }
