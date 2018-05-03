@@ -6,13 +6,16 @@
 .result-image {
   border: 1px dashed;
   margin: 0.2em;
+  max-width: 100%;
 }
 
 .result-video {
   margin: 0.2em;
+  max-width: 100%;
 }
 
 .results-missing {
   font-style: italic;
   font-size:  80%
+  max-width: 100%;
 }
