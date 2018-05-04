@@ -35,5 +35,5 @@ app.get('/api/search', (req, res) => {
   res.send(results);
 });
 
-const port = 3001;
+const port = 9001;
 app.listen(port, () => console.log(`backend running on port ${port}`));
