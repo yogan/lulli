@@ -8,6 +8,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
+          <a href="http://zogan.de/var/lulz.xml">
+            <img class="rss-icon" src="rss.svg" />
+          </a>
           <h1 className="App-title">¯\_(ツ)_/¯</h1>
         </header>
         <Search />

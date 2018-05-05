@@ -5,8 +5,18 @@
 .App-header {
   color:            white;
   background-color: #222;
-  padding:          0.4em;
   margin-bottom:    0.8em;
+  position:         relative;
+  display:          flex;
+  justify-content:  center;
+  height:           56px;
+}
+
+.rss-icon {
+  position: absolute;
+  height:   24px;
+  top:      16px;
+  right:    16px;
 }
 
 .App-title {
