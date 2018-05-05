@@ -11,12 +11,12 @@
   "author": "Frank Blendinger",
   "license": "ISC",
   "dependencies": {
-    "config": "^1.29.4",
+    "config": "^1.30.0",
     "escape-string-regexp": "^1.0.5",
-    "express": "^4.16.2"
+    "express": "^4.16.3"
   },
   "devDependencies": {
-    "ava": "^1.0.0-beta.3",
-    "nodemon": "^1.14.12"
+    "ava": "^1.0.0-beta.4",
+    "nodemon": "^1.17.3"
   }
 }
