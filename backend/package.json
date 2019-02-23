@@ -11,7 +11,7 @@
   "author": "Frank Blendinger",
   "license": "ISC",
   "dependencies": {
-    "config": "^1.30.0",
+    "config": "^3.0.1",
     "escape-string-regexp": "^1.0.5",
     "express": "^4.16.3"
   },
