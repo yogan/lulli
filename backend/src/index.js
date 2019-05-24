@@ -1,4 +1,5 @@
 // @ts-check
+const config  = require('config');
 const express = require('express');
 const path    = require('path');
 
@@ -9,7 +10,7 @@ initializeCache();
 
 const app = express();
 
-const frontendPath = path.join(__dirname, '../../frontend/build');
+const frontendPath = path.join(__dirname, config.get('frontendPath'));
 
 app.use(express.static(frontendPath));
 
