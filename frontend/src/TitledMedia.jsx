@@ -20,7 +20,9 @@ export default function TitledMedia({match, idx}) {
 
   return (
     <figure>
-      {media}
+      <a href={url}>
+        {media}
+      </a>
       <figcaption>{title}</figcaption>
     </figure>
   );
