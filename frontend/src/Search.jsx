@@ -53,7 +53,7 @@ export class Search extends Component {
     }
 
     if (query.trim().length < 2) {
-      return;
+      return null;
     }
 
     const results = await this.queryMatches(query);
