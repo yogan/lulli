@@ -12,7 +12,7 @@ export default function TitledMedia({match, idx}) {
 
   const { filename, year, path } = match;
 
-  const url = process.env.PUBLIC_URL + '/data/' + path;
+  const url = resolveUrl(path) ;
 
   const title = makeTitle(filename, year);
 
@@ -28,4 +28,16 @@ export default function TitledMedia({match, idx}) {
       <figcaption>{title}</figcaption>
     </figure>
   );
+}
+
+function resolveUrl(path) {
+  if (process && process.env && process.env.PUBLIC_URL) {
+    // PUBLIC_URL is magically replaced by webpack dev server
+    // note that `process` is not defined when running without webpack
+    return `${process.env.PUBLIC_URL}/data/${path}`
+  }
+
+  // no webpack dev server means Docker, so use static URLs
+  // FIXME: Docker image not self-contained :-(
+  return `https://zogan.de/var/lulz/${path}`;
 }
