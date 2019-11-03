@@ -9,7 +9,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <a href="http://zogan.de/var/lulz.xml">
-            <img class="rss-icon" src="rss.svg" alt="RSS feed" />
+            <img className="rss-icon" src="rss.svg" alt="RSS feed" />
           </a>
           <h1 className="App-title">¯\_(ツ)_/¯</h1>
         </header>
