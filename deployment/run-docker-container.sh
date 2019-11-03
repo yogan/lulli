@@ -36,4 +36,4 @@ docker run \
     -p 9001:9001 \
     -v ${CONFIG_DIR}:${DOCKER_BASE_DIR}/server/config:ro \
     -v ${DATA_DIR}:${DOCKER_BASE_DIR}/data:ro \
-    lulli
+    yogan/lulli

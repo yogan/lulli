@@ -7,4 +7,4 @@ else
   (cd frontend && npm ci && npm run build)
 fi
 
-docker build -t lulli .
+docker build -t yogan/lulli .
