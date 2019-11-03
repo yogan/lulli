@@ -1,7 +1,7 @@
 // @ts-check
-const config = require('config');
-const fs     = require('fs');
-const path   = require('path');
+const fs      = require('fs');
+const path    = require('path');
+const process = require('process');
 
 const { arraysAreEqual } = require('./utils');
 
@@ -24,7 +24,10 @@ function initializeCache() {
 
 function findRootPath() {
   try {
-    rootPath = config.get('rootPath');
+    rootPath = process.env.NODE_ENV === 'docker'
+      ? '/usr/src/lulli/data'
+      : `${process.env.HOME}/.lulli/data`;
+
     if (!isDirectory(rootPath)) {
       exitRootPathMissing(rootPath);
     }
@@ -127,6 +130,6 @@ function getTimestamp(subdir, filename) {
 }
 
 function exitRootPathMissing(rootPath) {
-  console.log(`The 'rootPath' config value has to point to a directory (value in config was '${rootPath}')`);
+  console.log(`Data root path not found (tried: ${rootPath}`);
   process.exit(1);
 }

@@ -6,5 +6,3 @@ See `deployment/run-docker-image.sh` for gory details.
 TODO:
   - "baseUrl": "https://some.host/path/to/images"
     ^ maybe this can be made optional, and we let express serve the images
-  - "rootPath": "/usr/src/lulli/data"
-    ^ remove this from config, Docker image forces this path, no need for configurability here
