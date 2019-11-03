@@ -9,4 +9,9 @@ fi
 
 (cd frontend && npm run build)
 
+VERSION_FILE="frontend/build/version.txt"
+GIT_SHA1=$(git rev-parse HEAD)
+echo "Version: $GIT_SHA1"                                       > $VERSION_FILE
+echo "GitHub: https://github.com/yogan/lulli/commit/$GIT_SHA1" >> $VERSION_FILE
+
 docker build -t yogan/lulli .
