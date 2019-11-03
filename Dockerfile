@@ -12,4 +12,4 @@ RUN tar xf node_modules.tar
 
 EXPOSE 9001
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start-prod"]
