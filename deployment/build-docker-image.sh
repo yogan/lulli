@@ -15,3 +15,11 @@ echo "Version: $GIT_SHA1"                                       > $VERSION_FILE
 echo "GitHub: https://github.com/yogan/lulli/commit/$GIT_SHA1" >> $VERSION_FILE
 
 docker build -t yogan/lulli .
+
+echo "Docker image built."
+echo
+echo "Run it with:"
+echo "    ./deployment/run-docker-container.sh"
+echo
+echo "When everything is fine, push it with:"
+echo "    docker push yogan/lulli"
