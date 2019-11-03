@@ -1,7 +1,5 @@
 // @ts-check
-const config         = require('config');
-const path           = require('path');
-const { URL, parse } = require('url');
+const path = require('path');
 
 const {
   getFilenamesOfSubdirs,
@@ -29,14 +27,8 @@ function search(searchTerms) {
 function addMetaData(subdir, filename) {
   return {
     filename,
-    url:       toUrl(subdir, filename),
+    path:      path.join(subdir, filename),
     timestamp: getTimestamp(subdir, filename),
     year:      subdir
   };
-}
-
-function toUrl(subdir, filename) {
-  const { origin, pathname } = new URL(config.get('baseUrl'));
-  const appendedPath = path.join(pathname, subdir, filename);
-  return new URL(appendedPath, origin);
 }

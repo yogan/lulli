@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-WORKDIR /usr/src/lulli/server
+WORKDIR /usr/src/lulli
 
 COPY backend/package.json  .
 COPY backend/src/          ./src/

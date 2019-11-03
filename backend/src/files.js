@@ -25,8 +25,8 @@ function initializeCache() {
 function findRootPath() {
   try {
     rootPath = process.env.NODE_ENV === 'docker'
-      ? '/usr/src/lulli/data'
-      : `${process.env.HOME}/.lulli/data`;
+      ? '/usr/src/lulli/frontend/public/data'
+      : path.join(__dirname, '..', '..', 'frontend', 'public', 'data');
 
     if (!isDirectory(rootPath)) {
       exitRootPathMissing(rootPath);

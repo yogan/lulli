@@ -1,39 +1,31 @@
 #!/bin/bash
-
-if [[ $(docker version --format '{{.Client.Os}}') == "windows" ]] ; then
-    # FIXME: this only works when:
-    #   - using WSL, and Docker for Windows
-    #   - $USER in WSL is the same as the Windows user name
-    LULLI_BASE="c:/Users/$USER/.lulli"
-    CHECK_CONFIG_FILE="/mnt/c/Users/$USER/.lulli/config/default.json"
-    CHECK_DATA_DIR="/mnt/c/Users/$USER/.lulli/data"
+if [[ $(hostname) == "donnergurgler" ]] ; then
+    DATA_DIR="$(readlink -f $HOME/public_html/var/lulz)"
 else
-    LULLI_BASE="$HOME/.lulli"
-    CHECK_CONFIG_FILE="$LULLI_BASE/config/default.json"
-    CHECK_DATA_DIR="$LULLI_BASE/data"
+    DATA_DIR="$(readlink -f ./frontend/public/data)"
 fi
 
-if [[ ! -e "$CHECK_CONFIG_FILE" ]] ; then
-    echo "No configuration file found."
-    echo "Copy deployment/config/default.json to $CHECK_CONFIG_FILE and try again."
+if [[ ! -d "$DATA_DIR" ]] ; then
+    echo "No data directory not found."
+    echo "Please create $DATA_DIR and put in some images."
+    echo "A symlink is fine, too."
     exit 1
 fi
 
-if [[ ! -d "$CHECK_DATA_DIR" ]] ; then
-    echo "Data directory not found."
-    echo "Make sure that $CHECK_DATA_DIR exists and contains your images."
-    exit 2
+if [[ $(docker version --format '{{.Client.Os}}') == "windows" ]] ; then
+    if [[ $DATA_DIR =~ ^/mnt/ ]] ; then
+        DATA_DIR=$(echo $DATA_DIR | sed -e 's,/mnt/\(\w\)/,\1:/,')
+    else
+        echo "WARNING: detected Docker for Windows, but $DATA_DIR does not look like"
+        echo "a path to a Windows directory. Docker run will probably fail."
+    fi
 fi
 
-# those should hopefully work for both Docker for Windows and Linux
-CONFIG_DIR="${LULLI_BASE}/config"
-DATA_DIR="${LULLI_BASE}/data"
-DOCKER_BASE_DIR="/usr/src/lulli"
+DOCKER_DATA_DIR="/usr/src/lulli/frontend/public/data"
 
 docker run \
     -d --rm \
     --name lulli \
     -p 9001:9001 \
-    -v ${CONFIG_DIR}:${DOCKER_BASE_DIR}/server/config:ro \
-    -v ${DATA_DIR}:${DOCKER_BASE_DIR}/data:ro \
+    -v ${DATA_DIR}:${DOCKER_DATA_DIR}:ro \
     yogan/lulli

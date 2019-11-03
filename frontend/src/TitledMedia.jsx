@@ -10,7 +10,9 @@ export default function TitledMedia({match, idx}) {
     return null;
   }
 
-  const { filename, year, url } = match;
+  const { filename, year, path } = match;
+
+  const url = process.env.PUBLIC_URL + '/data/' + path;
 
   const title = makeTitle(filename, year);
 

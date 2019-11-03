@@ -1,3 +1,4 @@
 node_modules/
 backend/node_modules.tar
 backend/config/local.json
+frontend/public/data
