@@ -8,5 +8,3 @@ TODO:
     ^ maybe this can be made optional, and we let express serve the images
   - "rootPath": "/usr/src/lulli/data"
     ^ remove this from config, Docker image forces this path, no need for configurability here
-  - "frontendPath": "../frontend"
-    ^ probably also not neccessary at all
