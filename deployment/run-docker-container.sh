@@ -1,5 +1,7 @@
 #!/bin/bash
-if [[ $(hostname) == "donnergurgler" ]] ; then
+PRODUCTION_HOST="donnergurgler"
+
+if [[ $(hostname) == $PRODUCTION_HOST ]] ; then
     DATA_DIR="$(readlink -f $HOME/public_html/var/lulz)"
 else
     DATA_DIR="$(readlink -f ./frontend/public/data)"
@@ -29,3 +31,12 @@ docker run \
     -p 9001:9001 \
     -v ${DATA_DIR}:${DOCKER_DATA_DIR}:ro \
     yogan/lulli
+
+if [[ $(hostname) == $PRODUCTION_HOST ]] ; then
+    docker run \
+        -d --rm \
+        --name watchtower \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        containrrr/watchtower
+fi
+
