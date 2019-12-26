@@ -130,6 +130,6 @@ function getTimestamp(subdir, filename) {
 }
 
 function exitRootPathMissing(rootPath) {
-  console.log(`Data root path not found (tried: ${rootPath}`);
+  console.log(`Data root path not found (tried: ${rootPath})`);
   process.exit(1);
 }
