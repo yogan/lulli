@@ -10,6 +10,10 @@ COPY frontend/build        ./frontend/
 COPY backend/node_modules.tar .
 RUN tar xf node_modules.tar
 
+# FIXME: should be a docker-compose.yml with:
+#          ports:
+#              - "127.0.0.1:9001:80"
+# to not expose :9001 publically (see BSL)
 EXPOSE 9001
 
 CMD ["npm", "run", "start-prod"]
