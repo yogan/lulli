@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+    server:
+        image: yogan/lulli:latest
+        restart: always
+        container_name: lulli-server
+        ports:
+            - "127.0.0.1:9001:9001"
+        volumes:
+            - ~/public_html/var/lulz:/usr/src/lulli/frontend/public/data:ro
+
+    watchtower:
+        image: containrrr/watchtower
+        restart: always
+        container_name: lulli-watchtower
+        environment:
+            - WATCHTOWER_CLEANUP=true
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: --interval 300

@@ -1,11 +1,13 @@
 #!/bin/bash
-PRODUCTION_HOST="donnergurgler"
-
-if [[ $(hostname) == $PRODUCTION_HOST ]] ; then
-    DATA_DIR="$(readlink -f $HOME/public_html/var/lulz)"
-else
-    DATA_DIR="$(readlink -f ./frontend/public/data)"
+if [[ $(hostname) == "donnergurgler" ]] ; then
+    docker-compose up -d
+    exit
 fi
+
+# TODO: stuff below untested after production change docker-compose
+# maybe docker-compose makes sense for local dev as well (but w/o watchtower)
+
+DATA_DIR="$(readlink -f ./frontend/public/data)"
 
 if [[ ! -d "$DATA_DIR" ]] ; then
     echo "No data directory not found."
@@ -31,12 +33,3 @@ docker run \
     -p 9001:9001 \
     -v ${DATA_DIR}:${DOCKER_DATA_DIR}:ro \
     yogan/lulli
-
-if [[ $(hostname) == $PRODUCTION_HOST ]] ; then
-    docker run \
-        -d --rm \
-        --name lulli-watchtower \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        containrrr/watchtower
-fi
-
