@@ -35,7 +35,7 @@ docker run \
 if [[ $(hostname) == $PRODUCTION_HOST ]] ; then
     docker run \
         -d --rm \
-        --name watchtower \
+        --name lulli-watchtower \
         -v /var/run/docker.sock:/var/run/docker.sock \
         containrrr/watchtower
 fi
