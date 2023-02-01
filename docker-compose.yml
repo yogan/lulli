@@ -9,6 +9,8 @@ services:
             - "127.0.0.1:9001:9001"
         volumes:
             - ~/public_html/var/lulz:/usr/src/lulli/frontend/public/data:ro
+        labels:
+            - "com.centurylinklabs.watchtower.scope=lulli-scope"
 
     watchtower:
         image: containrrr/watchtower
@@ -18,4 +20,6 @@ services:
             - WATCHTOWER_CLEANUP=true
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-        command: --interval 300
+        command: --interval 300 --scope lulli-scope
+        labels:
+            - "com.centurylinklabs.watchtower.scope=lulli-scope"
