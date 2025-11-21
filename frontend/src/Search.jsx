@@ -10,8 +10,8 @@ export class Search extends Component {
     super(props);
     this.state = {
       searchText:   '',
-      previewCache: {},
-      matches:      null
+      resultsCache: {},
+      showResults: false,
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,26 +21,11 @@ export class Search extends Component {
   async handleChange(event) {
     const searchText = event.target.value;
 
-    // clearing matches, as we switch to "new search" mode, and display
-    // preview instead
-    this.setState({ searchText, matches: null });
+    // switch to preview
+    this.setState({ searchText, showResults: false });
 
-    if (this.state.previewCache[searchText]) {
-      return;
-    }
-
-    if (searchText.trim().length < 2) {
-      return;
-    }
-
-    const preview = await this.queryMatches(searchText);
-
-    this.setState((prevState) => ({
-      previewCache: {
-        ...prevState.previewCache,
-        [searchText]: preview
-      }
-    }));
+    // request results (for preview)
+    await this.requestResults(searchText);
   }
 
   async handleSubmit(event) {
@@ -51,15 +36,36 @@ export class Search extends Component {
       return;
     }
 
-    const matches = await this.queryMatches(searchText);
+    const matches = await this.requestResults(searchText);
+
+    this.setState({ searchText, showResults: true });
 
     if (matches && matches.length > 0) {
       // remove keyboard focus from input box to be able to scroll on page,
       // but only when there are some results
       this.input.blur();
     }
+  }
 
-    this.setState({ matches });
+  async requestResults(query) {
+    if (this.state.resultsCache[query]) {
+      return this.state.resultsCache[query];
+    }
+
+    if (query.trim().length < 2) {
+      return null;
+    }
+
+    const results = await this.queryMatches(query);
+
+    this.setState((prevState) => ({
+      resultsCache: {
+        ...prevState.resultsCache,
+        [query]: results
+      }
+    }));
+
+    return results;
   }
 
   async queryMatches(searchText) {
@@ -74,17 +80,16 @@ export class Search extends Component {
   }
 
   render() {
-    const { matches, previewCache, searchText } = this.state;
+    const { showResults, resultsCache, searchText } = this.state;
 
+    const matches = resultsCache[searchText];
+    const filteredMatches = filterAndSortMatches(matches);
     let previewOrResults;
 
-    if (matches) {
-      const filteredMatches = filterAndSortMatches(matches);
+    if (showResults) {
       previewOrResults = <Results matches={filteredMatches} />
     } else {
-      const preview = previewCache[searchText];
-      const filteredPreview = filterAndSortMatches(preview);
-      previewOrResults = <ResultPreview matches={filteredPreview} />;
+      previewOrResults = <ResultPreview matches={filteredMatches} />;
     }
 
     return (
